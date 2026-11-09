@@ -24,3 +24,65 @@ The action-only baseline scores intermediate checkpoints using the task, public 
 | **False alarms on feasible tasks** | Proposed run-level measure. Fraction of feasible runs with no verified failure that received at least one alert. |
 
 Compare scores before and after evidence of infeasibility appears, break down performance by failure category where counts support it, and estimate uncertainty by bootstrapping task pairs.
+
+## Run the action-only Qwen pilot
+
+Start Ollama with `qwen3.5:4b` available, then run from the repo root:
+
+```powershell
+python baseline.py --smoke
+python baseline.py --input heldout_checkpoints.jsonl
+```
+
+The smoke test scores two synthetic checkpoints and checks their expected risk ordering.
+Use it to check local inference. For the evaluation, export one JSON object per line:
+
+```json
+{"task":"Confirm the recipient before sending","public_context":"Two contacts match","actions":["Lookup returned two matches"],"label":0}
+```
+
+Include only information observed by that checkpoint in the three input fields.
+Keep private agent reasoning, subsequent actions, and outcome annotations out of those fields.
+Use `label: 1` for a verified failure in the next five decision steps and `label: 0`
+for a verified negative with a fully observed horizon. Exclude censored checkpoints and
+keep all variants and runs from each task pair together when preparing held-out data.
+
+The evaluation reports checkpoint counts, AUROC, average precision (stepwise area
+under the precision–recall curve), and maximum empirical recall at FPR ≤ 5%.
+The low-FPR number summarizes the held-out score curve. Selecting an alert threshold
+for use on new runs requires a separate validation split. With fewer than 20 negative
+checkpoints, the only empirical operating points within the budget have zero false positives.
+Ranking metrics are omitted when either class is absent.
+
+This pilot prompts Qwen as the monitor, with no fitting on trajectories. The supervised
+action-only monitor from the proposal remains a separate experiment.
+
+## Dataset
+
+[data/agentabstain-tasks.jsonl](data/agentabstain-tasks.jsonl) contains the unmodified AgentAbstain task table by Xun Liu et al. It includes 526 task variants (263 act/abstain pairs) across eight categories. Keep both variants together by `pair_id` when splitting runs. Source revision: `842228426c2a703347396501af61c7890972c7ee`. [Original dataset and attribution](https://huggingface.co/datasets/antiquality/agentabstain/tree/842228426c2a703347396501af61c7890972c7ee) · [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
+
+The task table describes benchmark scenarios. To produce `heldout_checkpoints.jsonl`, run the tasks in the upstream sandbox environments, capture the action histories, and label each checkpoint from the verified outcome over the next five decision steps. The task variant (`act` or `abstain`) does not indicate whether a run failed.
+
+## Train and test on the AgentAbstain task table
+
+```powershell
+python baseline.py --train-tasks --chart task-baseline.svg | Tee-Object task-baseline-results.json
+```
+
+This trains a word-count classifier (multinomial naive Bayes) using task instructions alone. The default seed is 42. The script holds out about 20% of pairs for testing and fits the vocabulary and word counts on the other pairs. Each pair stays entirely in one split. Here the positive label means **should abstain**. An instruction can omit runtime evidence, so this experiment measures what can be predicted from the request alone.
+
+| Metric | Plain-language meaning in this experiment |
+| --- | --- |
+| Positive rate | Share of test tasks that call for abstention. This is the reference score for average precision under random ranking. |
+| AUROC | How often a randomly picked should-abstain task gets a higher score than a randomly picked should-act task, with half credit for ties. |
+| Average precision | Summarizes how many flagged tasks really call for abstention as you vary how many tasks you flag. |
+| Recall at up to 5% false-positive rate | How many should-abstain tasks the model can catch while flagging at most 5% of should-act tasks. This describes the held-out score curve. |
+| Act accuracy | Share of should-act tasks classified as act. |
+| Abstain accuracy | Share of should-abstain tasks classified as abstain. |
+| Paired accuracy | Share of pairs where the model got both versions right. |
+| Conditioned abstention rate | Among pairs where the model got the act version right, share where it also got the abstain version right. |
+| TPR × TNR | Multiplies abstain accuracy by act accuracy, so a model that always picks one class scores zero. |
+
+The task metrics use pooled test counts. AgentAbstain's published scores average across categories and evaluate executed agents. The classifier uses no tool history or Qwen and is a separate experiment from the proposed supervised checkpoint monitor.
+
+**Early-warning lead time** measures how many decisions before a verified failure the monitor first warned. **False alarms on feasible runs** measures how often a feasible run with no verified failure got at least one warning. Both need recorded runs, verified outcomes, and an alert threshold. A task-level false positive cannot tell you whether the monitor would have interrupted a run. ImpossibleBench cheating rates and Agentic Abstention timing metrics also require executions in their respective benchmarks.

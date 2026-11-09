@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="465" viewBox="0 0 1000 465">
+<rect width="100%" height="100%" fill="white"/>
+<g font-family="Arial, sans-serif" fill="#17263d">
+<text x="36" y="45" font-size="28" font-weight="bold">AgentAbstain instruction-only baseline</text>
+<text x="36" y="75" font-size="16">211 train pairs · 52 held-out pairs · seed 42</text>
+<text x="36" y="126" font-size="20" font-weight="bold">Ranking and screening</text>
+<text x="36" y="157" font-size="15">AUROC</text>
+<rect x="36" y="165" width="360" height="14" rx="4" fill="#e8edf4"/>
+<rect x="36" y="165" width="209.69" height="14" rx="4" fill="#226e85"/>
+<text x="406" y="178" font-size="15">58.2%</text>
+<text x="36" y="216" font-size="15">Average precision</text>
+<rect x="36" y="224" width="360" height="14" rx="4" fill="#e8edf4"/>
+<rect x="36" y="224" width="207.38" height="14" rx="4" fill="#226e85"/>
+<text x="406" y="237" font-size="15">57.6%</text>
+<text x="36" y="275" font-size="15">Recall at up to 5% FPR</text>
+<rect x="36" y="283" width="360" height="14" rx="4" fill="#e8edf4"/>
+<rect x="36" y="283" width="41.54" height="14" rx="4" fill="#226e85"/>
+<text x="406" y="296" font-size="15">11.5%</text>
+<text x="36" y="381" text-anchor="middle" font-size="13">0%</text>
+<text x="216" y="381" text-anchor="middle" font-size="13">50%</text>
+<text x="396" y="381" text-anchor="middle" font-size="13">100%</text>
+<text x="526" y="126" font-size="20" font-weight="bold">Act / abstain decisions</text>
+<text x="526" y="157" font-size="15">Act accuracy</text>
+<rect x="526" y="165" width="360" height="14" rx="4" fill="#e8edf4"/>
+<rect x="526" y="165" width="221.54" height="14" rx="4" fill="#226e85"/>
+<text x="896" y="178" font-size="15">61.5%</text>
+<text x="526" y="216" font-size="15">Abstain accuracy</text>
+<rect x="526" y="224" width="360" height="14" rx="4" fill="#e8edf4"/>
+<rect x="526" y="224" width="180.00" height="14" rx="4" fill="#226e85"/>
+<text x="896" y="237" font-size="15">50.0%</text>
+<text x="526" y="275" font-size="15">Paired accuracy</text>
+<rect x="526" y="283" width="360" height="14" rx="4" fill="#e8edf4"/>
+<rect x="526" y="283" width="41.54" height="14" rx="4" fill="#226e85"/>
+<text x="896" y="296" font-size="15">11.5%</text>
+<text x="526" y="334" font-size="15">Conditioned abstention</text>
+<rect x="526" y="342" width="360" height="14" rx="4" fill="#e8edf4"/>
+<rect x="526" y="342" width="67.50" height="14" rx="4" fill="#226e85"/>
+<text x="896" y="355" font-size="15">18.8%</text>
+<text x="526" y="381" text-anchor="middle" font-size="13">0%</text>
+<text x="706" y="381" text-anchor="middle" font-size="13">50%</text>
+<text x="886" y="381" text-anchor="middle" font-size="13">100%</text>
+<text x="36" y="421" font-size="14">AUROC chance reference: 50%. Average precision reference: 50% should-abstain tasks.</text>
+<text x="36" y="443" font-size="14">Labels describe whether the task calls for abstaining. This experiment uses task instructions alone.</text>
+</g></svg>
