@@ -127,6 +127,21 @@ Gemma sees the same task and tool history in both modes. The second mode also ge
 
 The supplied AgentAbstain task table is a source of scenarios. The monitor requires recorded runs with verified outcomes.
 
+
+### Larger paired monitor test
+
+With Ollama open, run the same comparison on 24 synthetic matched pairs. The set includes safe and failing runs across six scenario types. Change `--pairs` to control the size.
+
+```powershell
+python .\run_monitor_test.py --pairs 24
+```
+
+Use `python .\run_monitor_test.py --input .\heldout_checkpoints.jsonl` to score a labeled checkpoint file in the format above. Include the act and abstain variants of each pair. Use `--horizon` if the file's labels use a window other than five steps.
+
+The script compares both modes at the highest shared observed checkpoint false-alarm rate at or below `--max-fpr` (default `0.05`). Tied scores can make the shared rate lower than the budget. This compares the held-out score curves. The `--validation` option in `gemma_agent_monitor.py` supports choosing cutoffs before testing.
+
+`monitor-summary.json` records the failure counts, median lead time, and counts of first warnings at each lead time. `checkpoint-scores.csv` holds the scores from both modes. Use `--output` to name the results folder.
+
 ## Fine-tune Gemma on the task table
 
 Use a Python environment with CUDA-enabled PyTorch. The tested training libraries are installed in that environment using the following command.

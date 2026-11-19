@@ -6,6 +6,10 @@ Gemma performed best after training on matched pairs. At a limit of 5% false ala
 
 Every run used the request text from the same 52 held-out AgentAbstain pairs (104 requests, split seed 42). Each pair has a should-act and a should-pause version. [Task data](data/agentabstain-tasks.jsonl)
 
+![Dot chart comparing naive Bayes and four Gemma runs on overall accuracy, AUROC, both versions right, and pause recall at up to 5% false alarms.](gemma-comparison.png)
+
+[Matplotlib source](plot_gemma_comparison.py)
+
 | Run | Accuracy | AUROC | Avg. precision | Both versions right | Pause recall at up to 5% false alarms |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | Naive Bayes | 55.8% | 0.582 | 0.576 | 6/52 | 11.5% |
